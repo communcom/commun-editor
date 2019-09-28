@@ -1,6 +1,4 @@
-[![npm version](https://badge.fury.io/js/rich-markdown-editor.svg)](https://badge.fury.io/js/rich-markdown-editor) [![CircleCI](https://img.shields.io/circleci/project/github/outline/rich-markdown-editor.svg)](https://circleci.com/gh/outline/rich-markdown-editor) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/outline) [![Formatted with Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
-
-# rich-markdown-editor
+# commun-editor
 
 A React and [Slate](https://github.com/ianstormtaylor/slate) based editor that powers the [Outline wiki](http://getoutline.com) and can also be used for displaying content in a read-only fashion.
 The editor is WYSIWYG and includes many formatting tools whilst retaining the ability to write markdown
@@ -105,7 +103,7 @@ This callback is triggered when the user explicitly requests to save using a key
 
 This callback is triggered when the `Cmd+Escape` is hit within the editor. You may use it to cancel editing.
 
-#### `onChange(() => value)`
+#### `onChange(value: Slate::Value)`
 
 This callback is triggered when the contents of the editor changes, usually due to user input such as a keystroke or using formatting options. You may use this to locally persist the editors state, see the [inbuilt example](/example/index.js).
 
@@ -123,7 +121,7 @@ Triggered once an image upload has succeeded or failed.
 
 The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of [SearchResult](/src/types.js) objects. eg:
 
-#### `onShowToast(message: string)`
+#### `onShowToast(error: string, message: string)`
 
 Triggered when the editor wishes to show a toast message to the user. Hook into your apps
 notification system, or simplisticly use `window.alert(message)`.

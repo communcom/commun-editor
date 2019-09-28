@@ -9,7 +9,6 @@ import defaultSchema from "./schema";
 import getDataTransferFiles from "./lib/getDataTransferFiles";
 import isModKey from "./lib/isModKey";
 import Flex from "./components/Flex";
-import Markdown from "./serializer";
 import createPlugins from "./plugins";
 import commands from "./commands";
 import queries from "./queries";
@@ -40,7 +39,7 @@ export type Props = {
   onImageUploadStop?: () => void,
   onSearchLink?: (term: string) => Promise<SearchResult[]>,
   onClickLink?: (href: string) => void,
-  onShowToast?: (message: string) => void,
+  onShowToast?: (error: string, message: string) => void,
   getLinkComponent?: Node => ?React.ComponentType<any>,
   className?: string,
   style?: Object,
@@ -52,7 +51,7 @@ type State = {
 
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
-    defaultValue: "",
+    defaultValue: {},
     placeholder: "Write something nice…",
     onImageUploadStart: () => {},
     onImageUploadStop: () => {},
@@ -78,7 +77,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.plugins = [...props.plugins, ...builtInPlugins];
 
     this.state = {
-      editorValue: Markdown.deserialize(props.defaultValue),
+      editorValue: Value.fromJSON(props.defaultValue),
     };
   }
 
@@ -127,13 +126,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   value = (): string => {
-    return Markdown.serialize(this.state.editorValue);
+    return this.state.editorValue;
   };
 
   handleChange = ({ value }: { value: Value }) => {
-    this.setState({ editorValue: value }, state => {
+    this.setState({ editorValue: value }, () => {
       if (this.props.onChange && !this.props.readOnly) {
-        this.props.onChange(this.value);
+        this.props.onChange(() => value.toJSON());
       }
     });
   };

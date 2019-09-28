@@ -1,11 +1,10 @@
 {
-  "name": "rich-markdown-editor",
-  "description": "A rich text editor with Markdown shortcuts built on Slate",
-  "version": "9.8.8",
+  "name": "commun-editor",
+  "description": "A rich text editor built on Slate",
+  "version": "0.1.0",
   "main": "lib/index.js",
   "license": "BSD-3-Clause",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "yarn eslint src",
     "start": "webpack-serve --config example/webpack.config.js --content example/dist",
     "build": "babel src/ -d lib/",
@@ -34,7 +33,6 @@
     "slate": "^0.45.0",
     "slate-collapse-on-escape": "^0.8.1",
     "slate-drop-or-paste-images": "^0.9.1",
-    "slate-md-serializer": "5.4.3-1",
     "slate-paste-linkify": "^0.7.0",
     "slate-react": "^0.21.20",
     "slate-schema-violations": "^0.1.39",
@@ -76,18 +74,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/outline/rich-markdown-editor.git"
+    "url": "git+https://github.com/communcom/commun-editor.git"
   },
   "keywords": [
     "editor",
-    "markdown",
     "slate",
     "text",
     "wysiwyg"
   ],
-  "author": "Tom Moor <tom.moor@gmail.com>",
-  "bugs": {
-    "url": "https://github.com/outline/rich-markdown-editor/issues"
-  },
-  "homepage": "https://github.com/outline/rich-markdown-editor#readme"
+  "author": "Commun.com Team",
+  "homepage": "https://github.com/communcom/commun-editor#readme"
 }

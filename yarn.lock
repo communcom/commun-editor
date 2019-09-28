@@ -3383,11 +3383,6 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
-hashtag-regex@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/hashtag-regex/-/hashtag-regex-2.0.0.tgz#9b32413529e9ca28b41e7c6378e35677b178d5ad"
-  integrity sha512-6qWo1g10ggwyorTjMEswX/z8DkODD1XnfjBjndIAj7rnUOgVlwYQz4UPQU9yBz2jBGd3Im1D1wlzzI/o6Q1Ptw==
-
 hmac-drbg@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
@@ -5930,13 +5925,6 @@ slate-hotkeys@^0.2.9:
   dependencies:
     is-hotkey "0.1.4"
     slate-dev-environment "^0.2.2"
-
-slate-md-serializer@5.4.3-1:
-  version "5.4.3-1"
-  resolved "https://registry.yarnpkg.com/slate-md-serializer/-/slate-md-serializer-5.4.3-1.tgz#311bf90300230f6f8aeeac464fa8694be3eb88c8"
-  integrity sha512-00jkxy1lp/d44Kkyn8/xlkiJj6WF22259Brvurv/GDYtKwE58dr7LAX0URM1E3wpT+Z6X9+kJJGsO6ECgp6lMw==
-  dependencies:
-    hashtag-regex "^2.0.0"
 
 slate-paste-linkify@^0.7.0:
   version "0.7.0"

@@ -5,13 +5,25 @@ import ReactDOM from "react-dom";
 import Editor from "../../src";
 
 const element = document.getElementById("main");
-const savedText = localStorage.getItem("saved");
-const exampleText = `
-# Welcome
 
-This is example content. It is persisted between reloads in localStorage.
-`;
-const defaultValue = savedText || exampleText;
+// const defaultValue = JSON.parse(localStorage.getItem("saved"));
+
+const defaultValue = {
+  document: {
+    nodes: [
+      {
+        object: "block",
+        type: "paragraph",
+        nodes: [
+          {
+            object: "text",
+            text: "A line of text in a paragraph.",
+          },
+        ],
+      },
+    ],
+  },
+};
 
 class GoogleEmbed extends React.Component<*> {
   render() {
@@ -37,7 +49,7 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
   };
 
   handleChange = debounce(value => {
-    localStorage.setItem("saved", value());
+    localStorage.setItem("saved", value);
   }, 250);
 
   render() {
@@ -62,7 +74,7 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
           onCancel={() => console.log("Cancel triggered")}
           onChange={this.handleChange}
           onClickLink={href => console.log("Clicked link: ", href)}
-          onShowToast={message => window.alert(message)}
+          onShowToast={(error, message) => window.alert(error || message)}
           onSearchLink={async term => {
             console.log("Searched link: ", term);
             return [
