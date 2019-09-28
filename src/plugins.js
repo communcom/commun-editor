@@ -15,7 +15,6 @@ import CollapsableHeadings from "./plugins/CollapsableHeadings";
 import KeyboardBehavior from "./plugins/KeyboardBehavior";
 import KeyboardShortcuts from "./plugins/KeyboardShortcuts";
 import MarkdownShortcuts from "./plugins/MarkdownShortcuts";
-import MarkdownPaste from "./plugins/MarkdownPaste";
 import Ellipsis from "./plugins/Ellipsis";
 import Embeds from "./plugins/Embeds";
 import Chrome from "./plugins/Chrome";
@@ -33,14 +32,16 @@ import "prismjs/components/prism-python";
 import "prismjs/components/prism-java";
 import "prismjs/components/prism-bash";
 
-const createPlugins = ({
+export default function createPlugins({
   placeholder,
   getLinkComponent,
+  enableToolbar,
 }: {
   placeholder: string,
   getLinkComponent?: Node => ?React.ComponentType<any>,
-}) => {
-  return [
+  enableToolbar?: boolean,
+}) {
+  const list = [
     Nodes,
     Marks,
     PasteLinkify({
@@ -91,11 +92,13 @@ const createPlugins = ({
     KeyboardBehavior(),
     KeyboardShortcuts(),
     MarkdownShortcuts(),
-    MarkdownPaste(),
     Ellipsis(),
     TrailingBlock({ type: "paragraph" }),
-    Chrome(),
   ];
-};
 
-export default createPlugins;
+  if (enableToolbar) {
+    list.push(Chrome());
+  }
+
+  return list;
+}

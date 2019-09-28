@@ -34,7 +34,7 @@ export type Props = {
   uploadImage?: (file: File) => Promise<string>,
   onSave?: ({ done?: boolean }) => void,
   onCancel?: () => void,
-  onChange: (value: () => string) => void,
+  onChange: (value: Value) => void,
   onImageUploadStart?: () => void,
   onImageUploadStop?: () => void,
   onSearchLink?: (term: string) => Promise<SearchResult[]>,
@@ -43,13 +43,14 @@ export type Props = {
   getLinkComponent?: Node => ?React.ComponentType<any>,
   className?: string,
   style?: Object,
+  enableToolbar?: boolean,
 };
 
 type State = {
   editorValue: Value,
 };
 
-class RichMarkdownEditor extends React.PureComponent<Props, State> {
+export default class CommunEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
     defaultValue: {},
     placeholder: "Write something nice…",
@@ -70,6 +71,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const builtInPlugins = createPlugins({
       placeholder: props.placeholder,
       getLinkComponent: props.getLinkComponent,
+      enableToolbar: props.enableToolbar,
     });
 
     // in Slate plugins earlier in the stack can opt not to continue
@@ -132,7 +134,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   handleChange = ({ value }: { value: Value }) => {
     this.setState({ editorValue: value }, () => {
       if (this.props.onChange && !this.props.readOnly) {
-        this.props.onChange(() => value.toJSON());
+        this.props.onChange(value);
       }
     });
   };
@@ -379,5 +381,3 @@ const StyledEditor = styled(Editor)`
     font-weight: 600;
   }
 `;
-
-export default RichMarkdownEditor;
