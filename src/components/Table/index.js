@@ -9,7 +9,7 @@ import Scrollable from "./Scrollable";
 // Looking for logic for the table controls and toolbars?
 // It mostly lives in the "Cell" component and the Table plugin
 
-class Table extends React.Component<Props> {
+export default class Table extends React.Component<Props> {
   table: HTMLTableElement;
 
   componentDidMount() {
@@ -76,5 +76,3 @@ const StyledTable = styled.table`
     }
   }
 `;
-
-export default Table;

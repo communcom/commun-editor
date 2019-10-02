@@ -8,7 +8,7 @@ import EditTable from "@domoinc/slate-edit-table";
 import InsertImages from "slate-drop-or-paste-images";
 import PasteLinkify from "slate-paste-linkify";
 import CollapseOnEscape from "slate-collapse-on-escape";
-import Prism from "golery-slate-prism";
+
 import Placeholder from "./plugins/Placeholder";
 import EditList from "./plugins/EditList";
 import CollapsableHeadings from "./plugins/CollapsableHeadings";
@@ -18,47 +18,46 @@ import MarkdownShortcuts from "./plugins/MarkdownShortcuts";
 import Ellipsis from "./plugins/Ellipsis";
 import Embeds from "./plugins/Embeds";
 import Chrome from "./plugins/Chrome";
-import Table from "./plugins/Table";
-import Nodes from "./nodes.js";
-import Marks from "./marks.js";
-
-// additional language support based on the most popular programming languages
-import "prismjs/components/prism-ruby";
-import "prismjs/components/prism-typescript";
-import "prismjs/components/prism-csharp";
-import "prismjs/components/prism-powershell";
-import "prismjs/components/prism-php";
-import "prismjs/components/prism-python";
-import "prismjs/components/prism-java";
-import "prismjs/components/prism-bash";
+import Nodes from "./nodes";
+import Marks from "./marks";
 
 export default function createPlugins({
   placeholder,
   getLinkComponent,
   enableToolbar,
 }: {
-  placeholder: string,
+  placeholder?: string,
   getLinkComponent?: Node => ?React.ComponentType<any>,
   enableToolbar?: boolean,
 }) {
-  const list = [
+  const plugins = [];
+
+  plugins.push(
     Nodes,
     Marks,
     PasteLinkify({
       type: "link",
       collapseTo: "end",
-    }),
-    Placeholder({
-      placeholder,
-      when: (editor: Editor, node: Node) => {
-        if (editor.readOnly) return false;
-        if (node.object !== "block") return false;
-        if (node.type !== "paragraph") return false;
-        if (node.text !== "") return false;
-        if (editor.value.document.getBlocks().size > 1) return false;
-        return true;
-      },
-    }),
+    })
+  );
+
+  if (placeholder) {
+    plugins.push(
+      Placeholder({
+        placeholder,
+        when: (editor: Editor, node: Node) => {
+          if (editor.readOnly) return false;
+          if (node.object !== "block") return false;
+          if (node.type !== "paragraph") return false;
+          if (node.text !== "") return false;
+          if (editor.value.document.getBlocks().size > 1) return false;
+          return true;
+        },
+      })
+    );
+  }
+
+  plugins.push(
     InsertImages({
       extensions: ["png", "jpg", "jpeg", "gif", "webp"],
       insertImage: (editor, file) => editor.insertImageFile(file),
@@ -80,11 +79,6 @@ export default function createPlugins({
       typeCell: "table-cell",
       typeContent: "paragraph",
     }),
-    Table(),
-    Prism({
-      onlyIn: node => node.type === "code",
-      getSyntax: node => node.data.get("language") || "javascript",
-    }),
     Embeds({ getComponent: getLinkComponent }),
     CollapseOnEscape({ toEdge: "end" }),
     CollapsableHeadings(),
@@ -93,12 +87,12 @@ export default function createPlugins({
     KeyboardShortcuts(),
     MarkdownShortcuts(),
     Ellipsis(),
-    TrailingBlock({ type: "paragraph" }),
-  ];
+    TrailingBlock({ type: "paragraph" })
+  );
 
   if (enableToolbar) {
-    list.push(Chrome());
+    plugins.push(Chrome());
   }
 
-  return list;
+  return plugins;
 }

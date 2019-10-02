@@ -6,9 +6,6 @@ import BlockToolbar from "./components/Toolbar/BlockToolbar";
 import HorizontalRule from "./components/HorizontalRule";
 import Image from "./components/Image";
 import Link from "./components/Link";
-import Table from "./components/Table";
-import Cell from "./components/Table/Cell";
-import Row from "./components/Table/Row";
 import ListItem from "./components/ListItem";
 import TodoList from "./components/TodoList";
 import {
@@ -41,12 +38,6 @@ function renderNode(props: SlateNodeProps, editor: Editor, next: Function) {
       return <ol {...attributes}>{props.children}</ol>;
     case "todo-list":
       return <TodoList {...attributes}>{props.children}</TodoList>;
-    case "table":
-      return <Table {...props}>{props.children}</Table>;
-    case "table-row":
-      return <Row {...props} />;
-    case "table-cell":
-      return <Cell {...props} />;
     case "list-item":
       return <ListItem {...props} />;
     case "horizontal-rule":

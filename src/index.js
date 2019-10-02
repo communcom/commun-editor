@@ -53,7 +53,7 @@ type State = {
 export default class CommunEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
     defaultValue: {},
-    placeholder: "Write something nice…",
+    placeholder: undefined,
     onImageUploadStart: () => {},
     onImageUploadStop: () => {},
     plugins: [],
