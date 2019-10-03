@@ -12,6 +12,8 @@ function renderMark(props: Props, editor: Editor, next: Function) {
   switch (props.mark.type) {
     case "mention":
       return <span className="mention">{props.children}</span>;
+    case "tag":
+      return <span className="tag">{props.children}</span>;
     case "bold":
       return <strong>{props.children}</strong>;
     case "code":
