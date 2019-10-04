@@ -12,8 +12,6 @@ import {
   BulletedListIcon,
   OrderedListIcon,
   HorizontalRuleIcon,
-  TodoListIcon,
-  TableIcon,
 } from "outline-icons";
 import getDataTransferFiles from "../../lib/getDataTransferFiles";
 import type { SlateNodeProps, Theme } from "../../types";
@@ -97,7 +95,7 @@ class BlockToolbar extends React.Component<Props> {
     const { editor } = this.props;
     const checked = type === "todo-list" ? false : undefined;
 
-    this.props.editor.setNodeByKey(this.props.node.key, {
+    editor.setNodeByKey(this.props.node.key, {
       type: "paragraph",
       text: "",
       isVoid: false,
@@ -134,8 +132,6 @@ class BlockToolbar extends React.Component<Props> {
         return this.insertList("bulleted-list");
       case "ordered-list":
         return this.insertList("ordered-list");
-      case "todo-list":
-        return this.insertList("todo-list");
       case "image":
         return this.onPickImage();
       default:
@@ -144,7 +140,9 @@ class BlockToolbar extends React.Component<Props> {
 
   onPickImage = () => {
     // simulate a click on the file upload input element
-    if (this.file) this.file.click();
+    if (this.file) {
+      this.file.click();
+    }
   };
 
   onImagePicked = async (ev: SyntheticInputEvent<>) => {
@@ -197,9 +195,7 @@ class BlockToolbar extends React.Component<Props> {
           OrderedListIcon,
           "Start numbered List"
         )}
-        {this.renderBlockButton("todo-list", TodoListIcon, "Start checklist")}
         <Separator />
-        {this.renderBlockButton("table", TableIcon, "Create table")}
         {this.renderBlockButton("block-quote", BlockQuoteIcon, "Add quote")}
         {this.renderBlockButton("code", CodeIcon, "Add code")}
         {this.renderBlockButton(

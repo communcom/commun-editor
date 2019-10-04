@@ -45,7 +45,7 @@ export default function KeyboardBehavior() {
       });
     }
 
-    if (startBlock.type.match(/(heading|block-quote)/)) {
+    if (startBlock.type.match(/^(?:heading|block-quote)/)) {
       ev.preventDefault();
 
       // if the heading is collapsed then show everything now so the user
@@ -102,7 +102,7 @@ export default function KeyboardBehavior() {
       if (
         selection.start.offset === 0 &&
         selection.end.offset === startBlock.text.length &&
-        startBlock.type.match(/heading/)
+        startBlock.type.match(/^heading/)
       ) {
         editor.showContentBelow(startBlock);
       }
@@ -117,7 +117,7 @@ export default function KeyboardBehavior() {
       ev.preventDefault();
 
       // If we're about to remove a heading then ensure that its not collapsed
-      if (startBlock.type.match(/heading/)) {
+      if (startBlock.type.match(/^heading/)) {
         editor.showContentBelow(startBlock);
       }
       editor.setBlocks("paragraph");

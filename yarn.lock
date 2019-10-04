@@ -196,11 +196,6 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@domoinc/slate-edit-table@^0.22.2":
-  version "0.22.2"
-  resolved "https://registry.yarnpkg.com/@domoinc/slate-edit-table/-/slate-edit-table-0.22.2.tgz#67450c1915eeae37d2a4055755c9a12f70f3306c"
-  integrity sha512-qGjOq/+R8jaQFCpJ2WM/71r+5LIenXMImgMc0st6Isg8W4OGFomj5uMNDaKuznBgPfbtV8/zzvLwjuGba5faSA==
-
 "@emotion/is-prop-valid@^0.8.1":
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-0.8.2.tgz#b9692080da79041683021fcc32f96b40c54c59dc"
@@ -280,7 +275,7 @@
 
 "@tommoor/slate-edit-list@0.19.0-0":
   version "0.19.0-0"
-  resolved "https://registry.yarnpkg.com/@tommoor/slate-edit-list/-/slate-edit-list-0.19.0-0.tgz#972a714e9ea4cdf47a530d5702a904f5547be2dd"
+  resolved "https://npm.golos.io/@tommoor%2fslate-edit-list/-/slate-edit-list-0.19.0-0.tgz#972a714e9ea4cdf47a530d5702a904f5547be2dd"
   integrity sha512-jknTytLU2bicfxfSeYD7fN8BlBbn+hcyK7u1+IXafo4ObuND71dtZuwPm3oU3YAAiTWZe0VBQVzrCDoBZkxMaA==
 
 "@webassemblyjs/ast@1.8.5":

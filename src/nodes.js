@@ -62,6 +62,12 @@ function renderNode(props: SlateNodeProps, editor: Editor, next: Function) {
       return <Heading5 {...props} />;
     case "heading6":
       return <Heading6 {...props} />;
+    case "embed":
+      return (
+        <div className="embed" {...props}>
+          LOL: {props.children}
+        </div>
+      );
     default:
       return next();
   }

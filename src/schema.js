@@ -58,11 +58,7 @@ const schema = {
       isVoid: true,
     },
     "list-item": {
-      parent: [
-        { type: "bulleted-list" },
-        { type: "ordered-list" },
-        { type: "todo-list" },
-      ],
+      parent: [{ type: "bulleted-list" }, { type: "ordered-list" }],
       nodes: [
         {
           match: [
@@ -71,10 +67,12 @@ const schema = {
             { type: "paragraph" },
             { type: "bulleted-list" },
             { type: "ordered-list" },
-            { type: "todo-list" },
           ],
         },
       ],
+    },
+    embed: {
+      isVoid: true,
     },
   },
   document: {
@@ -98,6 +96,7 @@ const schema = {
           { type: "block-toolbar" },
           { type: "table" },
           { type: "link" },
+          { type: "embed" },
         ],
         min: 1,
       },
