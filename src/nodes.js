@@ -7,7 +7,6 @@ import HorizontalRule from "./components/HorizontalRule";
 import Image from "./components/Image";
 import Link from "./components/Link";
 import ListItem from "./components/ListItem";
-import TodoList from "./components/TodoList";
 import {
   Heading1,
   Heading2,
@@ -36,8 +35,6 @@ function renderNode(props: SlateNodeProps, editor: Editor, next: Function) {
       return <ul {...attributes}>{props.children}</ul>;
     case "ordered-list":
       return <ol {...attributes}>{props.children}</ol>;
-    case "todo-list":
-      return <TodoList {...attributes}>{props.children}</TodoList>;
     case "list-item":
       return <ListItem {...props} />;
     case "horizontal-rule":

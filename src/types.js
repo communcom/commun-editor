@@ -35,7 +35,6 @@ export type Block =
   | "horizontal-rule"
   | "bulleted-list"
   | "ordered-list"
-  | "todo-list"
   | "image";
 
 export type Mark = "bold" | "italic" | "deleted" | "code" | "link";

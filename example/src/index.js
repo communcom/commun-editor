@@ -70,8 +70,6 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
           id="example"
           readOnly={this.state.readOnly}
           defaultValue={defaultValue}
-          onSave={options => console.log("Save triggered", options)}
-          onCancel={() => console.log("Cancel triggered")}
           onChange={this.handleChange}
           onClickLink={href => console.log("Clicked link: ", href)}
           onShowToast={(error, message) => window.alert(error || message)}

@@ -4,6 +4,18 @@
   "version": "0.1.5",
   "main": "lib/index.js",
   "license": "BSD-3-Clause",
+  "keywords": [
+    "editor",
+    "slate",
+    "text",
+    "wysiwyg"
+  ],
+  "author": "Commun.com Team",
+  "homepage": "https://github.com/communcom/commun-editor#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/communcom/commun-editor.git"
+  },
   "scripts": {
     "lint": "yarn eslint src",
     "start": "webpack-serve --config example/webpack.config.js --content example/dist",
@@ -32,6 +44,7 @@
     "slate-drop-or-paste-images": "^0.9.1",
     "slate-paste-linkify": "^0.7.0",
     "slate-react": "^0.21.20",
+    "slate-react-placeholder": "^0.2.8",
     "slate-schema-violations": "^0.1.39",
     "slugify": "^1.3.4",
     "styled-components": "^4.3.2"
@@ -68,17 +81,5 @@
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3",
     "webpack-serve": "^2.0.3"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/communcom/commun-editor.git"
-  },
-  "keywords": [
-    "editor",
-    "slate",
-    "text",
-    "wysiwyg"
-  ],
-  "author": "Commun.com Team",
-  "homepage": "https://github.com/communcom/commun-editor#readme"
+  }
 }

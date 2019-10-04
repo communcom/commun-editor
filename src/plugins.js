@@ -15,19 +15,31 @@ import KeyboardBehavior from "./plugins/KeyboardBehavior";
 import Ellipsis from "./plugins/Ellipsis";
 import Embeds from "./plugins/Embeds";
 import Chrome from "./plugins/Chrome";
+import Markify from "./plugins/Markify";
+import PasteLink from "./plugins/PasteLink";
 import Nodes from "./nodes";
 import Marks from "./marks";
 
 export default function createPlugins({
+  type,
   placeholder,
+  titlePlaceholder,
   getLinkComponent,
   enableToolbar,
+  handleLink,
 }: {
+  type: string,
   placeholder?: string,
+  titlePlaceholder?: string,
   getLinkComponent?: Node => ?React.ComponentType<any>,
   enableToolbar?: boolean,
+  handleLink?: Function,
 }) {
   const plugins = [];
+
+  if (handleLink) {
+    plugins.push(PasteLink(handleLink));
+  }
 
   plugins.push(
     Nodes,
@@ -38,7 +50,25 @@ export default function createPlugins({
     })
   );
 
+  if (titlePlaceholder) {
+    console.log("titlePlaceholder true");
+
+    plugins.push(
+      Placeholder({
+        placeholder: titlePlaceholder,
+        when: (editor, node) =>
+          !editor.readOnly &&
+          node.object === "block" &&
+          node.type === "heading1" &&
+          node.text === "" &&
+          editor.value.document.nodes.first() === node,
+      })
+    );
+  }
+
   if (placeholder) {
+    console.log("placeholder true");
+
     plugins.push(
       Placeholder({
         placeholder,
@@ -53,6 +83,7 @@ export default function createPlugins({
   }
 
   plugins.push(
+    Markify(),
     InsertImages({
       extensions: ["png", "jpg", "jpeg", "gif", "webp"],
       insertImage: (editor, file) => editor.insertImageFile(file),

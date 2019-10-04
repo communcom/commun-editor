@@ -77,23 +77,18 @@ class BlockToolbar extends React.Component<Props> {
     const { editor } = this.props;
 
     editor.moveToEndOfNode(this.props.node);
-
-    if (options.type === "table") {
-      editor.insertTable(3, 3).moveSelection(0, 0);
-    } else {
-      editor.insertBlock(options.type);
-    }
+    editor.insertBlock(options.type);
 
     editor.removeNodeByKey(this.props.node.key).moveToEnd();
 
     if (cursorPosition === "before") editor.moveToStartOfPreviousBlock();
     if (cursorPosition === "after") editor.moveToStartOfNextBlock();
+
     return editor.focus();
   };
 
   insertList = (type: string) => {
     const { editor } = this.props;
-    const checked = type === "todo-list" ? false : undefined;
 
     editor.setNodeByKey(this.props.node.key, {
       type: "paragraph",
@@ -105,7 +100,7 @@ class BlockToolbar extends React.Component<Props> {
       .moveToEndOfNode(this.props.node)
       .command(changes.wrapInList, type, undefined, {
         type: "list-item",
-        data: { checked },
+        data: {},
       })
       .focus();
   };
@@ -118,7 +113,6 @@ class BlockToolbar extends React.Component<Props> {
       case "heading1":
       case "heading2":
       case "block-quote":
-      case "table":
       case "code":
         return this.insertBlock({ type });
       case "horizontal-rule":

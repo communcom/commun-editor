@@ -1,29 +1,27 @@
 // @flow
 import * as React from "react";
-import { Value, Editor as TEditor, Schema, Node } from "slate";
+import { Value, Schema, Node } from "slate";
 import { Editor } from "slate-react";
 import styled, { ThemeProvider } from "styled-components";
-import type { Plugin, SearchResult } from "./types";
+import type { SearchResult } from "./types";
 import { light as lightTheme, dark as darkTheme } from "./theme";
-import defaultSchema from "./schema";
 import getDataTransferFiles from "./lib/getDataTransferFiles";
-import isModKey from "./lib/isModKey";
 import Flex from "./components/Flex";
 import createPlugins from "./plugins";
 import commands from "./commands";
 import queries from "./queries";
+import { createSchema } from "./schema";
+
+export { createSchema } from "./schema";
 
 export const theme = lightTheme;
-export const schema = defaultSchema;
-
-const defaultOptions = {};
 
 export type Props = {
   id?: string,
+  type?: string,
   defaultValue: string,
-  placeholder: string,
-  pretitle?: string,
-  plugins: Plugin[],
+  placeholder?: string,
+  titlePlaceholder?: string,
   autoFocus?: boolean,
   readOnly?: boolean,
   headingsOffset?: number,
@@ -31,9 +29,8 @@ export type Props = {
   dark?: boolean,
   schema?: Schema,
   theme?: Object,
+  handleLink?: Function,
   uploadImage?: (file: File) => Promise<string>,
-  onSave?: ({ done?: boolean }) => void,
-  onCancel?: () => void,
   onChange: (value: Value) => void,
   onImageUploadStart?: () => void,
   onImageUploadStop?: () => void,
@@ -53,30 +50,31 @@ type State = {
 export default class CommunEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
     defaultValue: {},
+    type: "basic",
     placeholder: undefined,
-    onImageUploadStart: () => {},
-    onImageUploadStop: () => {},
-    plugins: [],
+    titlePlaceholder: undefined,
     tooltip: "span",
+    onImageUploadStart: undefined,
+    onImageUploadStop: undefined,
   };
 
   editor: Editor;
-  plugins: Plugin[];
-  prevSchema: ?Schema = null;
   schema: ?Schema = null;
 
   constructor(props: Props) {
     super(props);
 
-    const builtInPlugins = createPlugins({
+    this.plugins = createPlugins({
+      type: props.type,
       placeholder: props.placeholder,
+      titlePlaceholder:
+        props.type === "article" ? props.titlePlaceholder || "..." : undefined,
       getLinkComponent: props.getLinkComponent,
       enableToolbar: props.enableToolbar,
+      handleLink: props.handleLink,
     });
 
-    // in Slate plugins earlier in the stack can opt not to continue
-    // to later ones. By adding overrides first we give more control
-    this.plugins = [...props.plugins, ...builtInPlugins];
+    this.schema = createSchema(props.type);
 
     this.state = {
       editorValue: Value.fromJSON(props.defaultValue),
@@ -84,14 +82,11 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
+    const { readOnly, autoFocus } = this.props;
+
     this.scrollToAnchor();
 
-    if (this.props.readOnly) return;
-    if (typeof window !== "undefined") {
-      window.addEventListener("keydown", this.handleKeyDown);
-    }
-
-    if (this.props.autoFocus) {
+    if (!readOnly && autoFocus) {
       this.focusAtEnd();
     }
   }
@@ -102,19 +97,19 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
     }
   }
 
-  componentWillUnmount() {
-    if (typeof window !== "undefined") {
-      window.removeEventListener("keydown", this.handleKeyDown);
-    }
-  }
-
   scrollToAnchor() {
     const { hash } = window.location;
-    if (!hash) return;
+
+    if (!hash) {
+      return;
+    }
 
     try {
       const element = document.querySelector(hash);
-      if (element) element.scrollIntoView({ behavior: "smooth" });
+
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
     } catch (err) {
       // querySelector will throw an error if the hash begins with a number
       // or contains a period. This is protected against now by safeSlugify
@@ -132,27 +127,38 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
   };
 
   handleChange = ({ value }: { value: Value }) => {
+    const { readOnly, onChange } = this.props;
+
     this.setState({ editorValue: value }, () => {
-      if (this.props.onChange && !this.props.readOnly) {
-        this.props.onChange(value);
+      if (onChange && !readOnly) {
+        onChange(value);
       }
     });
   };
 
   handleDrop = async (ev: SyntheticDragEvent<>) => {
-    if (this.props.readOnly) return;
+    const { readOnly } = this.props;
+
+    if (readOnly) {
+      return;
+    }
 
     // check an image upload callback is defined
-    if (!this.editor.props.uploadImage) return;
+    if (!this.editor.props.uploadImage) {
+      return;
+    }
 
     // check if this event was already handled by the Editor
-    if (ev.isDefaultPrevented()) return;
+    if (ev.isDefaultPrevented()) {
+      return;
+    }
 
     // otherwise we'll handle this
     ev.preventDefault();
     ev.stopPropagation();
 
     const files = getDataTransferFiles(ev);
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       if (file.type.startsWith("image/")) {
@@ -169,56 +175,6 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
     ev.preventDefault();
   };
 
-  onSave(ev: SyntheticKeyboardEvent<>) {
-    const { onSave } = this.props;
-    if (onSave) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      onSave({ done: false });
-    }
-  }
-
-  onSaveAndExit(ev: SyntheticKeyboardEvent<>) {
-    const { onSave } = this.props;
-    if (onSave) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      onSave({ done: true });
-    }
-  }
-
-  onCancel(ev: SyntheticKeyboardEvent<>) {
-    const { onCancel } = this.props;
-    if (onCancel) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      onCancel();
-    }
-  }
-
-  handleKeyDown = (
-    ev: SyntheticKeyboardEvent<>,
-    editor: TEditor,
-    next: Function = () => {}
-  ) => {
-    if (this.props.readOnly) return next();
-
-    switch (ev.key) {
-      case "s":
-        if (isModKey(ev)) return this.onSave(ev);
-        break;
-      case "Enter":
-        if (isModKey(ev)) return this.onSaveAndExit(ev);
-        break;
-      case "Escape":
-        if (isModKey(ev)) return this.onCancel(ev);
-        break;
-      default:
-    }
-
-    return next();
-  };
-
   focusAtStart = () => {
     const { editor } = this;
     editor.moveToStartOfDocument().focus();
@@ -229,31 +185,9 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
     editor.moveToEndOfDocument().focus();
   };
 
-  getSchema = () => {
-    if (this.prevSchema !== this.props.schema) {
-      this.schema = {
-        ...defaultSchema,
-        ...(this.props.schema || {}),
-      };
-      this.prevSchema = this.props.schema;
-    }
-    return this.schema;
-  };
-
   render = () => {
     const {
       readOnly,
-      pretitle,
-      placeholder,
-      onSave,
-      onChange,
-      onCancel,
-      uploadImage,
-      onSearchLink,
-      onClickLink,
-      onImageUploadStart,
-      onImageUploadStop,
-      onShowToast,
       className,
       style,
       dark,
@@ -284,22 +218,11 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
             value={this.state.editorValue}
             commands={commands}
             queries={queries}
-            placeholder={placeholder}
-            schema={this.getSchema()}
-            onKeyDown={this.handleKeyDown}
-            onChange={this.handleChange}
-            onSave={onSave}
-            onSearchLink={onSearchLink}
-            onClickLink={onClickLink}
-            onImageUploadStart={onImageUploadStart}
-            onImageUploadStop={onImageUploadStop}
-            onShowToast={onShowToast}
+            schema={this.schema}
             readOnly={readOnly}
             spellCheck={!readOnly}
-            uploadImage={uploadImage}
-            pretitle={pretitle}
-            options={defaultOptions}
             {...rest}
+            onChange={this.handleChange}
           />
         </ThemeProvider>
       </Flex>
