@@ -51,8 +51,6 @@ export default function createPlugins({
   );
 
   if (titlePlaceholder) {
-    console.log("titlePlaceholder true");
-
     plugins.push(
       Placeholder({
         placeholder: titlePlaceholder,
@@ -67,8 +65,6 @@ export default function createPlugins({
   }
 
   if (placeholder) {
-    console.log("placeholder true");
-
     plugins.push(
       Placeholder({
         placeholder,
