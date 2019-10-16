@@ -1,6 +1,6 @@
 /* eslint-disable no-cond-assign,flowtype/require-valid-file-annotation */
 
-const MENTION_RX = /(?<=^|[,.\b\s])@[a-z0-9]+\b/g;
+const MENTION_RX = /(?<=^|[,.\b\s])@[a-z][a-z0-9-][a-z0-9]+\b/g;
 const TAG_RX = /(?<=^|[,.\b\s])#[a-z0-9]+\b/g;
 
 export default () => ({
