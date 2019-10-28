@@ -1,7 +1,7 @@
 /* eslint-disable no-cond-assign,flowtype/require-valid-file-annotation */
 
-const MENTION_RX = /(?<=^|[,.\b\s])@[a-z][a-z0-9-][a-z0-9]+\b/g;
-const TAG_RX = /(?<=^|[,.\b\s])#[a-z0-9]+\b/g;
+const MENTION_RX = /(?:^|[,.\b\s])(@[a-z][a-z0-9-][a-z0-9]+)(?:[,.\b\s|$])/;
+const TAG_RX = /(?:^|[,.\b\s])(#[a-z0-9]+)(?:[,.\b\s|$])/;
 
 export default () => ({
   onChange: (editor, next) => {
@@ -30,25 +30,28 @@ export default () => ({
         editor.removeMarkAtRange(range, "tag");
       }
 
-      let match;
+      function markByRx(rx, markName) {
+        let remainText = text;
+        let index = 0;
+        let match;
 
-      while ((match = MENTION_RX.exec(text))) {
-        const range = document
-          .createRange()
-          .moveStartTo(textNode.key, match.index)
-          .moveEndTo(textNode.key, match.index + match[0].length);
+        while ((match = remainText.match(rx))) {
+          const offset = index + match.index + match[0].indexOf(match[1]);
 
-        editor.addMarkAtRange(range, "mention");
+          const range = document
+            .createRange()
+            .moveStartTo(textNode.key, offset)
+            .moveEndTo(textNode.key, offset + match[1].length);
+
+          editor.addMarkAtRange(range, markName);
+
+          index = offset + match[1].length;
+          remainText = text.substr(index);
+        }
       }
 
-      while ((match = TAG_RX.exec(text))) {
-        const range = document
-          .createRange()
-          .moveStartTo(textNode.key, match.index)
-          .moveEndTo(textNode.key, match.index + match[0].length);
-
-        editor.addMarkAtRange(range, "tag");
-      }
+      markByRx(MENTION_RX, "mention");
+      markByRx(TAG_RX, "tag");
     });
 
     return next();
