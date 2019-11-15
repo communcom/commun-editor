@@ -68,12 +68,28 @@ export default function createPlugins({
     plugins.push(
       Placeholder({
         placeholder,
-        when: (editor: Editor, node: Node) =>
-          !editor.readOnly &&
-          node.object === "block" &&
-          node.type === "paragraph" &&
-          node.text === "" &&
-          editor.value.document.getBlocks().size <= 1,
+        when: (editor: Editor, node: Node) => {
+          if (editor.readOnly) {
+            return false;
+          }
+
+          const isEmptyParagraph =
+            node.object === "block" &&
+            node.type === "paragraph" &&
+            node.text === "";
+
+          if (isEmptyParagraph) {
+            const textNodes = editor.value.document.getBlocksByType(
+              "paragraph"
+            );
+
+            if (node === textNodes.first() && textNodes.size === 1) {
+              return true;
+            }
+          }
+
+          return false;
+        },
       })
     );
   }

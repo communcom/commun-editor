@@ -11,6 +11,7 @@ const Placeholder = styled.span.attrs({
   white-space: nowrap;
   line-height: 1.2em;
   color: ${props => props.theme.placeholder};
+  user-select: none;
 `;
 
 export default Placeholder;

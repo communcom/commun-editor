@@ -9,7 +9,7 @@ type Props = {
   onCopy: () => void,
 };
 
-class CopyToClipboard extends React.Component<Props> {
+export default class CopyToClipboard extends React.Component<Props> {
   onClick = (ev: SyntheticEvent<>) => {
     const { text, onCopy, children } = this.props;
     const elem = React.Children.only(children);
@@ -28,5 +28,3 @@ class CopyToClipboard extends React.Component<Props> {
     return React.cloneElement(elem, { ...rest, onClick: this.onClick });
   }
 }
-
-export default CopyToClipboard;

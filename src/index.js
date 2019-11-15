@@ -276,21 +276,6 @@ const StyledEditor = styled(Editor)`
     margin: 0;
   }
 
-  .todoList {
-    list-style: none;
-    padding-left: 0;
-
-    .todoList {
-      padding-left: 1em;
-    }
-  }
-
-  .todo {
-    span:last-child:focus {
-      outline: none;
-    }
-  }
-
   blockquote {
     border-left: 3px solid ${props => props.theme.quote};
     margin: 0;

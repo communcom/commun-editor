@@ -84,7 +84,6 @@ export function createSchema(type = "basic") {
   switch (type) {
     case "article":
       nodes.unshift({ match: { type: "heading1" }, min: 1, max: 1 });
-
       normalize = articleNormalize;
       break;
     case "comment":

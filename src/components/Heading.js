@@ -80,7 +80,7 @@ const CollapseToggle = styled.a`
   svg {
     ${props => props.collapsed && "transform: rotate(-90deg);"};
     fill: ${props =>
-  props.collapsed ? props.theme.text : props.theme.placeholder};
+      props.collapsed ? props.theme.text : props.theme.placeholder};
     transition: transform 100ms ease-in-out;
   }
 

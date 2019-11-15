@@ -43,18 +43,18 @@ class BlockInsert extends React.Component<Props, State> {
     closestRootNode: undefined,
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     if (typeof window !== "undefined") {
       window.addEventListener("mousemove", this.handleMouseMove);
     }
-  };
+  }
 
-  componentWillUnmount = () => {
+  componentWillUnmount() {
     if (this.mouseMoveTimeout) clearTimeout(this.mouseMoveTimeout);
     if (typeof window !== "undefined") {
       window.removeEventListener("mousemove", this.handleMouseMove);
     }
-  };
+  }
 
   setInactive = () => {
     this.setState({ active: false });
@@ -134,16 +134,16 @@ class BlockInsert extends React.Component<Props, State> {
 
   render() {
     const { theme } = this.props;
-    const style = { top: `${this.state.top}px`, left: `${this.state.left}px` };
+    const { top, left } = this.state;
 
     return (
       <React.Fragment>
         <span ref={this.setRef} />
         <Portal>
-          <Trigger active={this.state.active} style={style}>
+          <Trigger active={this.state.active} style={{ top, left }}>
             <PlusIcon
-              onClick={this.handleClick}
               color={theme.blockToolbarTrigger}
+              onClick={this.handleClick}
             />
           </Trigger>
         </Portal>
@@ -154,9 +154,7 @@ class BlockInsert extends React.Component<Props, State> {
 
 const Trigger = styled.div`
   position: absolute;
-  z-index: ${props => {
-    return props.theme.zIndex + 99;
-  }}; /* must be below toolbar index */
+  z-index: ${props => props.theme.zIndex + 99};
   opacity: 0;
   background-color: ${props => props.theme.background};
   transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
