@@ -27,6 +27,7 @@ export default function createPlugins({
   getLinkComponent,
   enableToolbar,
   handleLink,
+  embedRenderer,
 }: {
   type: string,
   placeholder?: string,
@@ -34,6 +35,7 @@ export default function createPlugins({
   getLinkComponent?: Node => ?React.ComponentType<any>,
   enableToolbar?: boolean,
   handleLink?: Function,
+  embedRenderer?: Function,
 }) {
   const plugins = [];
 
@@ -42,7 +44,7 @@ export default function createPlugins({
   }
 
   plugins.push(
-    Nodes,
+    Nodes({ embedRenderer }),
     Marks,
     PasteLinkify({
       type: "link",

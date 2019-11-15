@@ -16,58 +16,57 @@ import {
   Heading6,
 } from "./components/Heading";
 import Paragraph from "./components/Paragraph";
+import Embed from "./components/Embed";
 import type { SlateNodeProps } from "./types";
 
-function renderNode(props: SlateNodeProps, editor: Editor, next: Function) {
-  const { attributes } = props;
+export default ({ embedRenderer } = {}) => {
+  function renderNode(props: SlateNodeProps, editor: Editor, next: Function) {
+    const { attributes } = props;
 
-  const hidden = props.node.data.get("hidden");
-  if (hidden) attributes.style = { display: "none" };
+    const hidden = props.node.data.get("hidden");
+    if (hidden) attributes.style = { display: "none" };
 
-  switch (props.node.type) {
-    case "paragraph":
-      return <Paragraph {...props} />;
-    case "block-toolbar":
-      return <BlockToolbar {...props} />;
-    case "block-quote":
-      return <blockquote {...attributes}>{props.children}</blockquote>;
-    case "bulleted-list":
-      return <ul {...attributes}>{props.children}</ul>;
-    case "ordered-list":
-      return <ol {...attributes}>{props.children}</ol>;
-    case "list-item":
-      return <ListItem {...props} />;
-    case "horizontal-rule":
-      return <HorizontalRule {...props} />;
-    case "code":
-      return <Code {...props} />;
-    case "code-line":
-      return <pre {...attributes}>{props.children}</pre>;
-    case "image":
-      return <Image {...props} />;
-    case "link":
-      return <Link {...props} />;
-    case "heading1":
-      return <Heading1 {...props} />;
-    case "heading2":
-      return <Heading2 {...props} />;
-    case "heading3":
-      return <Heading3 {...props} />;
-    case "heading4":
-      return <Heading4 {...props} />;
-    case "heading5":
-      return <Heading5 {...props} />;
-    case "heading6":
-      return <Heading6 {...props} />;
-    case "embed":
-      return (
-        <div className="embed" {...props}>
-          LOL: {props.children}
-        </div>
-      );
-    default:
-      return next();
+    switch (props.node.type) {
+      case "paragraph":
+        return <Paragraph {...props} />;
+      case "block-toolbar":
+        return <BlockToolbar {...props} />;
+      case "block-quote":
+        return <blockquote {...attributes}>{props.children}</blockquote>;
+      case "bulleted-list":
+        return <ul {...attributes}>{props.children}</ul>;
+      case "ordered-list":
+        return <ol {...attributes}>{props.children}</ol>;
+      case "list-item":
+        return <ListItem {...props} />;
+      case "horizontal-rule":
+        return <HorizontalRule {...props} />;
+      case "code":
+        return <Code {...props} />;
+      case "code-line":
+        return <pre {...attributes}>{props.children}</pre>;
+      case "image":
+        return <Image {...props} />;
+      case "link":
+        return <Link {...props} />;
+      case "heading1":
+        return <Heading1 {...props} />;
+      case "heading2":
+        return <Heading2 {...props} />;
+      case "heading3":
+        return <Heading3 {...props} />;
+      case "heading4":
+        return <Heading4 {...props} />;
+      case "heading5":
+        return <Heading5 {...props} />;
+      case "heading6":
+        return <Heading6 {...props} />;
+      case "embed":
+        return <Embed {...props} embedRenderer={embedRenderer} />;
+      default:
+        return next();
+    }
   }
-}
 
-export default { renderNode };
+  return { renderNode };
+};
