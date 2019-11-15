@@ -7,7 +7,7 @@ import type { SlateNodeProps } from "../types";
 const Wrapper = styled.div`
   margin: 10px 0;
 
-  ${({ isSelected }) => (isSelected ? "box-shadow: 0 0 0 2px #61c2fe;" : null)}
+  ${({ isSelected }) => (isSelected ? "box-shadow: 0 0 0 2px #6a80f5;" : null)}
 `;
 
 export default function Embed({
@@ -18,8 +18,6 @@ export default function Embed({
   embedRenderer,
 }: SlateNodeProps) {
   const data = node.data.toJS();
-
-  console.log("Embed props:", data.embed);
 
   return (
     <Wrapper
