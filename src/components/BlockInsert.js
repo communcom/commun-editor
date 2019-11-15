@@ -76,7 +76,7 @@ class BlockInsert extends React.Component<Props, State> {
       // or the current node is an embed.
       const hideToolbar =
         result.node.type !== "paragraph" ||
-        !!result.node.text.trim() ||
+        result.node.text.trim() ||
         result.node.isVoid;
 
       if (hideToolbar) {
@@ -84,7 +84,7 @@ class BlockInsert extends React.Component<Props, State> {
         newState.active = false;
       } else {
         newState.left = Math.round(result.bounds.left - 20);
-        newState.top = Math.round(result.bounds.top + window.scrollY);
+        newState.top = Math.round(result.bounds.top - 3 + window.scrollY);
       }
     }
 

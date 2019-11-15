@@ -8,7 +8,24 @@ export default function PasteLink(handleLink) {
         node.type === "link" &&
         node.text === node.data.get("href")
       ) {
-        handleLink(node);
+        const { startBlock } = editor.value;
+
+        handleLink(node, embed => {
+          if (editor.value.startBlock !== startBlock) {
+            return;
+          }
+
+          const embedObj = {
+            type: "embed",
+            text: "",
+            isVoid: true,
+            data: {
+              embed,
+            },
+          };
+
+          editor.moveToEndOfNode(startBlock).insertBlock(embedObj);
+        });
       }
 
       return next();

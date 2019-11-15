@@ -6,11 +6,11 @@ import styled, { ThemeProvider } from "styled-components";
 import type { SearchResult } from "./types";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import getDataTransferFiles from "./lib/getDataTransferFiles";
-import Flex from "./components/Flex";
 import createPlugins from "./plugins";
 import commands from "./commands";
 import queries from "./queries";
 import { createSchema } from "./schema";
+import { EMPTY_ARTICLE_VALUE, EMPTY_VALUE } from "./emptyValues";
 
 export { createSchema } from "./schema";
 
@@ -49,11 +49,12 @@ type State = {
 
 export default class CommunEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
-    defaultValue: {},
+    defaultValue: null,
     type: "basic",
     placeholder: undefined,
     titlePlaceholder: undefined,
     tooltip: "span",
+    embedRenderer: undefined,
     onImageUploadStart: undefined,
     onImageUploadStop: undefined,
   };
@@ -64,20 +65,32 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const isArticle = props.type === "article";
+
     this.plugins = createPlugins({
       type: props.type,
       placeholder: props.placeholder,
-      titlePlaceholder:
-        props.type === "article" ? props.titlePlaceholder || "..." : undefined,
+      titlePlaceholder: isArticle ? props.titlePlaceholder || "..." : undefined,
       getLinkComponent: props.getLinkComponent,
       enableToolbar: props.enableToolbar,
       handleLink: props.handleLink,
+      embedRenderer: props.embedRenderer,
     });
 
     this.schema = createSchema(props.type);
 
+    let value = props.defaultValue;
+
+    if (!value) {
+      if (isArticle) {
+        value = EMPTY_ARTICLE_VALUE;
+      } else {
+        value = EMPTY_VALUE;
+      }
+    }
+
     this.state = {
-      editorValue: Value.fromJSON(props.defaultValue),
+      editorValue: Value.fromJSON(value),
     };
   }
 
@@ -200,16 +213,12 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
 
     return (
-      <Flex
+      <div
         style={style}
         className={className}
         onDrop={this.handleDrop}
         onDragOver={this.cancelEvent}
         onDragEnter={this.cancelEvent}
-        align="flex-start"
-        justify="center"
-        column
-        auto
       >
         <ThemeProvider theme={theme}>
           <StyledEditor
@@ -225,7 +234,7 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
             onChange={this.handleChange}
           />
         </ThemeProvider>
-      </Flex>
+      </div>
     );
   };
 }
@@ -237,6 +246,9 @@ const StyledEditor = styled(Editor)`
   font-size: 1em;
   line-height: 1.7em;
   width: 100%;
+  min-height: 100%;
+  margin: -1px;
+  padding: 1px;
 
   h1,
   h2,
