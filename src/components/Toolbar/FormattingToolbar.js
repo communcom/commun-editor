@@ -154,7 +154,6 @@ class FormattingToolbar extends React.Component<Props> {
   render() {
     const { editor } = this.props;
     const isSelectionInHeading = editor.isSelectionInHeading();
-    const isSelectionInTable = editor.isSelectionInTable();
     const Tooltip = editor.props.tooltip;
 
     return (
@@ -171,7 +170,7 @@ class FormattingToolbar extends React.Component<Props> {
             {this.renderMarkButton("code", CodeIcon, "Code")}
           </React.Fragment>
         )}
-        {!isSelectionInTable && (
+        {
           <React.Fragment>
             {!isSelectionInHeading && <Separator />}
             {this.renderBlockButton("heading1", Heading1Icon, "Heading")}
@@ -179,7 +178,7 @@ class FormattingToolbar extends React.Component<Props> {
             {!isSelectionInHeading &&
               this.renderBlockButton("block-quote", BlockQuoteIcon, "Quote")}
           </React.Fragment>
-        )}
+        }
         {!isSelectionInHeading && (
           <React.Fragment>
             <Separator />

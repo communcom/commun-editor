@@ -14,7 +14,8 @@ type Props = {
 type State = {
   activeHeading: ?string,
 };
-class Contents extends React.Component<Props, State> {
+
+export default class Contents extends React.Component<Props, State> {
   state = {
     activeHeading: undefined,
   };
@@ -170,5 +171,3 @@ const Sections = styled.ol`
     }
   }
 `;
-
-export default Contents;

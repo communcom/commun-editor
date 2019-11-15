@@ -11,7 +11,7 @@ type State = {
   copied: boolean,
 };
 
-class CopyButton extends React.Component<Props, State> {
+export default class CopyButton extends React.Component<Props, State> {
   copiedTimeout: ?TimeoutID;
   state = { copied: false };
 
@@ -40,12 +40,9 @@ const StyledCopyToClipboard = styled(CopyToClipboard)`
   position: absolute;
   top: 0;
   right: 0;
-
   opacity: 0;
   transition: opacity 50ms ease-in-out;
-  z-index: ${props => {
-    return props.theme.zIndex + 99;
-  }}; /* must be below toolbar index */
+  z-index: ${props => props.theme.zIndex + 99};
   font-size: 12px;
   font-weight: 500;
   color: ${props => props.theme.text};
@@ -54,5 +51,3 @@ const StyledCopyToClipboard = styled(CopyToClipboard)`
   padding: 2px 6px;
   cursor: pointer;
 `;
-
-export default CopyButton;
