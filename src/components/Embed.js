@@ -11,6 +11,7 @@ const Wrapper = styled.div`
 `;
 
 export default function Embed({
+  editor,
   node,
   attributes,
   isFocused,
@@ -25,7 +26,10 @@ export default function Embed({
       isSelected={isFocused || isSelected}
       {...attributes}
     >
-      {embedRenderer(data.embed)}
+      {embedRenderer({
+        embed: data.embed,
+        onRemove: () => editor.removeNodeByKey(node.key),
+      })}
     </Wrapper>
   );
 }
