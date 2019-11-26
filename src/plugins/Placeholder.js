@@ -52,7 +52,7 @@ function PlaceholderPlugin(
 
       return (
         <span>
-          <Placeholder>{content}</Placeholder>
+          <Placeholder className="editor__placeholder">{content}</Placeholder>
           {children}
         </span>
       );

@@ -1,9 +1,8 @@
 // @flow
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Placeholder = styled.span.attrs({
   contentEditable: false,
-  id: 'editor-placeholder',
 })`
   pointer-events: none;
   display: inline-block;
