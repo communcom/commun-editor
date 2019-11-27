@@ -11,7 +11,7 @@ function removeInlines(
   }
 }
 
-function articleNormalize(editor, { code, node, child, index }) {
+function normalizeArticle(editor, { code, node, child, index }) {
   switch (code) {
     case "child_max_invalid": {
       const type = index === 0 ? "heading1" : "paragraph";
@@ -43,7 +43,7 @@ function articleNormalize(editor, { code, node, child, index }) {
   }
 }
 
-function commentNormalize(editor, { code, node, child, index }) {
+function normalizeBasic(editor, { code, node, child, index }) {
   if (code === "child_type_invalid") {
     return editor.setNodeByKey(child.key, "paragraph");
   }
@@ -55,71 +55,58 @@ function commentNormalize(editor, { code, node, child, index }) {
 }
 
 export function createSchema(type = "basic") {
-  let normalize = undefined;
+  if (type === "article") {
+    return createArticleSchema();
+  }
 
+  return createBasicSchema();
+}
+
+function createBasicSchema() {
+  return {
+    blocks: {
+      link: {
+        nodes: [{ match: { object: "text" } }],
+      },
+    },
+    document: {
+      nodes: [
+        {
+          match: [{ type: "paragraph" }, { type: "link" }],
+          min: 1,
+        },
+      ],
+      normalize: normalizeBasic,
+    },
+  };
+}
+
+function createArticleSchema() {
   const nodes = [
+    {
+      match: { type: "heading1" },
+      min: 1,
+      max: 1,
+    },
     {
       match: [
         { type: "paragraph" },
-        { type: "heading1" },
-        { type: "heading2" },
-        { type: "heading3" },
-        { type: "heading4" },
-        { type: "heading5" },
-        { type: "heading6" },
-        { type: "block-quote" },
-        { type: "code" },
-        { type: "horizontal-rule" },
         { type: "image" },
-        { type: "bulleted-list" },
-        { type: "ordered-list" },
         { type: "block-toolbar" },
         { type: "link" },
         { type: "embed" },
+        // { type: "block-quote" },
+        // { type: "code" },
+        // { type: "bulleted-list" },
+        // { type: "ordered-list" },
       ],
       min: 1,
     },
   ];
 
-  switch (type) {
-    case "article":
-      nodes.unshift({ match: { type: "heading1" }, min: 1, max: 1 });
-      normalize = articleNormalize;
-      break;
-    case "comment":
-      normalize = commentNormalize;
-      break;
-    default:
-  }
-
   return {
     blocks: {
       heading1: {
-        nodes: [{ match: { object: "text" } }],
-        marks: [""],
-        normalize: removeInlines,
-      },
-      heading2: {
-        nodes: [{ match: { object: "text" } }],
-        marks: [""],
-        normalize: removeInlines,
-      },
-      heading3: {
-        nodes: [{ match: { object: "text" } }],
-        marks: [""],
-        normalize: removeInlines,
-      },
-      heading4: {
-        nodes: [{ match: { object: "text" } }],
-        marks: [""],
-        normalize: removeInlines,
-      },
-      heading5: {
-        nodes: [{ match: { object: "text" } }],
-        marks: [""],
-        normalize: removeInlines,
-      },
-      heading6: {
         nodes: [{ match: { object: "text" } }],
         marks: [""],
         normalize: removeInlines,
@@ -159,7 +146,7 @@ export function createSchema(type = "basic") {
     },
     document: {
       nodes,
-      normalize,
+      normalize: normalizeArticle,
     },
   };
 }
