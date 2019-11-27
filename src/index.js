@@ -247,8 +247,6 @@ const StyledEditor = styled(Editor)`
   line-height: 1.7em;
   width: 100%;
   min-height: 100%;
-  margin: -1px;
-  padding: 1px;
 
   h1,
   h2,
