@@ -70,9 +70,9 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
           id="example"
           readOnly={this.state.readOnly}
           defaultValue={defaultValue}
+          showToast={(error, message) => window.alert(error || message)}
           onChange={this.handleChange}
           onClickLink={href => console.log("Clicked link: ", href)}
-          onShowToast={(error, message) => window.alert(error || message)}
           onSearchLink={async term => {
             console.log("Searched link: ", term);
             return [

@@ -31,12 +31,10 @@ export type Props = {
   theme?: Object,
   handleLink?: Function,
   uploadImage?: (file: File) => Promise<string>,
+  showToast?: (error: string, message: string) => void,
   onChange: (value: Value) => void,
-  onImageUploadStart?: () => void,
-  onImageUploadStop?: () => void,
   onSearchLink?: (term: string) => Promise<SearchResult[]>,
   onClickLink?: (href: string) => void,
-  onShowToast?: (error: string, message: string) => void,
   getLinkComponent?: Node => ?React.ComponentType<any>,
   className?: string,
   style?: Object,
@@ -55,8 +53,6 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
     titlePlaceholder: undefined,
     tooltip: "span",
     embedRenderer: undefined,
-    onImageUploadStart: undefined,
-    onImageUploadStop: undefined,
   };
 
   editor: Editor;

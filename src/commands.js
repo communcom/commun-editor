@@ -12,75 +12,108 @@ const commands = {
     editor.unwrapInline("link");
   },
 
-  insertImageFile(editor: Editor, file: window.File) {
-    const {
-      uploadImage,
-      onImageUploadStart,
-      onShowToast,
-      onImageUploadStop,
-    } = editor.props;
+  async insertImageFile(editor: Editor, file: window.File) {
+    const { type, uploadImage } = editor.props;
 
     if (!uploadImage) {
-      console.warn(
-        "uploadImage callback must be defined to handle image uploads."
-      );
+      return;
     }
 
-    if (onImageUploadStart) onImageUploadStart();
-
-    let key = KeyUtils.create();
-    const alt = "";
-
-    // load the file as a data URL
-    const placeholderSrc = URL.createObjectURL(file);
-    const node = Block.create({
-      key,
-      type: "image",
-      isVoid: true,
-      data: { src: placeholderSrc, alt, loading: true },
-    });
-
-    editor
-      .insertBlock(node)
-      .insertBlock("paragraph")
-      .onChange(editor);
-
-    // withoutSaving prevents this op from being added to the history, so you can't
-    // undo back to showing the upload placeholder. 'onChange' addition is a hack
-    // to get around a bug in slate-drop-or-paste-images
-    editor.withoutSaving(editor => {
-      // now we have a placeholder, start the image upload. This could be very fast
-      // or take multiple seconds. The user may further edit the content during this time.
-      uploadImage(file)
-        .then(src => {
-          if (!src) {
-            throw new Error("No image url returned from uploadImage callback");
-          }
-
-          // replace the placeholder with the final image if we can. The user may have
-          // removed it during upload so we need to take that into account.
-          try {
-            editor.setNodeByKey(key, {
-              data: { src, alt, loading: false },
-            });
-          } catch (err) {
-            console.warn("Image placeholder could not be found", err);
-          }
-        })
-        .catch(err => {
-          // if there was an error during upload, remove the placeholder image
-          editor.removeNodeByKey(key);
-
-          if (onShowToast) {
-            onShowToast("Sorry, an error occurred uploading the image");
-          }
-          throw err;
-        })
-        .finally(() => {
-          if (onImageUploadStop) onImageUploadStop();
-        });
-    });
+    if (type === "article") {
+      return processImageInsertIntoArticle(editor, file);
+    } else {
+      return processImageInsertIntoBasic(editor, file);
+    }
   },
 };
+
+async function processImageInsertIntoBasic(editor: Editor, file: window.File) {
+  const { uploadImage, showToast, onLinkFound } = editor.props;
+
+  if (!onLinkFound) {
+    return;
+  }
+
+  try {
+    const url = await uploadImage(file);
+
+    if (url) {
+      onLinkFound({
+        type: "image",
+        content: url,
+      });
+    }
+  } catch (err) {
+    console.error("Uploading failed:", err);
+
+    if (showToast) {
+      showToast(`Image uploading failed: ${err.message}`);
+    }
+  }
+}
+
+async function processImageInsertIntoArticle(
+  editor: Editor,
+  file: window.File
+) {
+  const { uploadImage, showToast } = editor.props;
+
+  const key = KeyUtils.create();
+
+  // load the file as a data URL
+  const placeholderSrc = URL.createObjectURL(file);
+  const node = Block.create({
+    key,
+    type: "image",
+    isVoid: true,
+    data: {
+      src: placeholderSrc,
+      alt: "",
+      loading: true,
+    },
+  });
+
+  editor
+    .insertBlock(node)
+    .insertBlock("paragraph")
+    .onChange(editor);
+
+  let imageUrl = null;
+
+  try {
+    imageUrl = await uploadImage(file);
+  } catch (err) {
+    // if there was an error during upload, remove the placeholder image
+    tryRemoveNodeWithoutSaving(editor, key);
+
+    if (showToast) {
+      showToast(`Image uploading failed: ${err.message}`);
+    }
+    return;
+  }
+
+  if (!imageUrl) {
+    tryRemoveNodeWithoutSaving(editor, key);
+    return;
+  }
+
+  try {
+    editor.withoutSaving(editor =>
+      editor.setNodeByKey(key, {
+        data: {
+          src: imageUrl,
+          alt: "",
+          loading: false,
+        },
+      })
+    );
+  } catch (err) {}
+}
+
+function tryRemoveNodeWithoutSaving(editor: Editor, key) {
+  try {
+    editor.withoutSaving(editor => editor.removeNodeByKey(key));
+  } catch (err) {}
+}
 
 export default commands;
