@@ -11,7 +11,7 @@ function removeInlines(
   }
 }
 
-function articleNormalize(editor, { code, node, child, index }) {
+function normalizeArticle(editor, { code, node, child, index }) {
   switch (code) {
     case "child_max_invalid": {
       const type = index === 0 ? "heading1" : "paragraph";
@@ -43,7 +43,7 @@ function articleNormalize(editor, { code, node, child, index }) {
   }
 }
 
-function basicNormalize(editor, { code, node, child, index }) {
+function normalizeBasic(editor, { code, node, child, index }) {
   if (code === "child_type_invalid") {
     return editor.setNodeByKey(child.key, "paragraph");
   }
@@ -76,7 +76,7 @@ function createBasicSchema() {
           min: 1,
         },
       ],
-      normalize: basicNormalize,
+      normalize: normalizeBasic,
     },
   };
 }
@@ -146,7 +146,7 @@ function createArticleSchema() {
     },
     document: {
       nodes,
-      normalize: articleNormalize,
+      normalize: normalizeArticle,
     },
   };
 }
