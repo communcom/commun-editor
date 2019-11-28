@@ -38,7 +38,6 @@ const Code = styled.code`
     word-spacing: normal;
     word-break: normal;
     -moz-tab-size: 4;
-    -o-tab-size: 4;
     tab-size: 4;
     -webkit-hyphens: none;
     -moz-hyphens: none;

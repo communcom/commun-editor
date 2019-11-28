@@ -3,13 +3,14 @@ import * as React from "react";
 import ImageZoom from "react-medium-image-zoom";
 import TextareaAutosize from "react-autosize-textarea";
 import styled from "styled-components";
+
 import type { SlateNodeProps as Props } from "../types";
 
 type State = {
   hasError?: boolean,
 };
 
-class Image extends React.Component<Props, State> {
+export default class Image extends React.Component<Props, State> {
   state = {
     hasError: false,
   };
@@ -164,5 +165,3 @@ const Caption = styled(TextareaAutosize)`
     color: ${props => props.theme.placeholder};
   }
 `;
-
-export default Image;
