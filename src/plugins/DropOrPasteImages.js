@@ -99,9 +99,7 @@ function onInsertHtml(
 ) {
   const { extensions } = options;
   const { editor } = change;
-  /* flow-disable */
   const { html } = transfer;
-  /* flow-enable */
   const parser = new DOMParser();
   const doc = (parser.parseFromString(html, "text/html"): any);
   const firstChild = doc.body.firstChild;
@@ -110,12 +108,10 @@ function onInsertHtml(
     return next();
   }
 
-  const src = firstChild.src;
+  const { src } = firstChild;
 
-  if (extensions) {
-    if (!extensions.includes(getExtension(src))) {
-      return next();
-    }
+  if (extensions && !extensions.includes(getExtension(src))) {
+    return next();
   }
 
   loadAndApply(options, editor, range, src);

@@ -8,7 +8,7 @@ type Props = {
   title: string,
 };
 
-class LinkSearchResult extends React.Component<Props> {
+export default class LinkSearchResult extends React.Component<Props> {
   render() {
     const { title, ...rest } = this.props;
     return (
@@ -49,5 +49,3 @@ const ListItem = styled.a`
     }
   }
 `;
-
-export default LinkSearchResult;
