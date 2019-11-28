@@ -18,7 +18,7 @@ export const theme = lightTheme;
 
 export type Props = {
   id?: string,
-  type?: string,
+  type: string,
   defaultValue: string,
   placeholder?: string,
   titlePlaceholder?: string,
@@ -36,6 +36,7 @@ export type Props = {
   onSearchLink?: (term: string) => Promise<SearchResult[]>,
   onClickLink?: (href: string) => void,
   getLinkComponent?: Node => ?React.ComponentType<any>,
+  embedRenderer?: Function,
   className?: string,
   style?: Object,
   enableToolbar?: boolean,
@@ -57,6 +58,7 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
 
   editor: Editor;
   schema: ?Schema = null;
+  plugins: Object;
 
   constructor(props: Props) {
     super(props);
@@ -202,7 +204,6 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
       dark,
       defaultValue,
       autoFocus,
-      plugins,
       ...rest
     } = this.props;
 
