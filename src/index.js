@@ -103,7 +103,9 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.readOnly && !this.props.readOnly && this.props.autoFocus) {
+    const { readOnly, autoFocus } = this.props;
+
+    if (autoFocus && prevProps.readOnly && !readOnly) {
       this.focusAtEnd();
     }
   }
@@ -188,12 +190,20 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
 
   focusAtStart = () => {
     const { editor } = this;
-    editor.moveToStartOfDocument().focus();
+    try {
+      editor.moveToStartOfDocument().focus();
+    } catch (err) {
+      console.warn("Editor focus failed:", err);
+    }
   };
 
   focusAtEnd = () => {
     const { editor } = this;
-    editor.moveToEndOfDocument().focus();
+    try {
+      editor.moveToEndOfDocument().focus();
+    } catch (err) {
+      console.warn("Editor focus failed:", err);
+    }
   };
 
   render = () => {
