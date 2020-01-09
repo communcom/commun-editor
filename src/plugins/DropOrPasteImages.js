@@ -37,21 +37,26 @@ export default function DropOrPasteImages(options: PluginOptions = {}): Object {
     const transfer = getEventTransfer(event);
     const range = getEventRange(event, editor);
 
-    switch (transfer.type) {
-      case "files":
-        return onInsertFiles(options, event, change, next, transfer, range);
-      case "html":
-        return onInsertHtml(options, event, change, next, transfer, range);
-      case "text":
-        return onInsertText(options, event, change, next, transfer, range);
-      default:
-        return next();
+    if (transfer.type === "files") {
+      return onInsertFiles(options, event, change, next, transfer, range);
     }
+
+    if (event.type === "drop") {
+      switch (transfer.type) {
+        case "html":
+          return onInsertHtml(options, event, change, next, transfer, range);
+        case "text":
+          return onInsertText(options, event, change, next, transfer, range);
+        default:
+      }
+    }
+
+    return next();
   }
 
   return {
     onDrop: onInsert,
-    // onPaste: onInsert,
+    onPaste: onInsert,
   };
 }
 
