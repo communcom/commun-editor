@@ -68,7 +68,7 @@ export default class CommunEditor extends React.PureComponent<Props, State> {
     this.plugins = createPlugins({
       type: props.type,
       placeholder: props.placeholder,
-      titlePlaceholder: isArticle ? props.titlePlaceholder || "..." : undefined,
+      titlePlaceholder: props.titlePlaceholder,
       getLinkComponent: props.getLinkComponent,
       enableToolbar: props.enableToolbar,
       handleLink: props.handleLink,
