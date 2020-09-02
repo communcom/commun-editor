@@ -80,36 +80,11 @@ export function createSchema(type = "basic") {
     return createArticleSchema();
   }
 
-  return createBasicSchema();
-}
+  if (type === "comment") {
+    return createCommentSchema();
+  }
 
-function createBasicSchema() {
-  return {
-    blocks: {
-      heading1: {
-        nodes: [{ match: { object: "text" } }],
-        marks: [""],
-        normalize: removeInlines,
-      },
-      link: {
-        nodes: [{ match: { object: "text" } }],
-      },
-    },
-    document: {
-      nodes: [
-        {
-          match: { type: "heading1" },
-          min: 1,
-          max: 1,
-        },
-        {
-          match: [{ type: "paragraph" }, { type: "link" }],
-          min: 1,
-        },
-      ],
-      normalize: normalizeBasic,
-    },
-  };
+  return createBasicSchema();
 }
 
 function createArticleSchema() {
@@ -178,6 +153,54 @@ function createArticleSchema() {
     document: {
       nodes,
       normalize: normalizeArticle,
+    },
+  };
+}
+
+function createCommentSchema() {
+  return {
+    blocks: {
+      link: {
+        nodes: [{ match: { object: "text" } }],
+      },
+    },
+    document: {
+      nodes: [
+        {
+          match: [{ type: "paragraph" }, { type: "link" }],
+          min: 1,
+        },
+      ],
+      normalize: normalizeBasic,
+    },
+  };
+}
+
+function createBasicSchema() {
+  return {
+    blocks: {
+      heading1: {
+        nodes: [{ match: { object: "text" } }],
+        marks: [""],
+        normalize: removeInlines,
+      },
+      link: {
+        nodes: [{ match: { object: "text" } }],
+      },
+    },
+    document: {
+      nodes: [
+        {
+          match: { type: "heading1" },
+          min: 1,
+          max: 1,
+        },
+        {
+          match: [{ type: "paragraph" }, { type: "link" }],
+          min: 1,
+        },
+      ],
+      normalize: normalizeBasic,
     },
   };
 }
