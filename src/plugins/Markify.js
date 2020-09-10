@@ -1,7 +1,7 @@
 /* eslint-disable no-cond-assign,flowtype/require-valid-file-annotation */
 
 const MENTION_RX = /(?:^|[^\w/\\])(@[a-z][a-z0-9.-]+[a-z0-9])/;
-const TAG_RX = /#[^\s!@#$%^&*()=+.\/,\[{\]};:'"?><]+/;
+const TAG_RX = /(?:^|[^\w/\\])(#[^\s!@#$%^&*()=+.\/,\[{\]};:'"?><]+)/;
 
 export default () => ({
   onChange: (editor, next) => {
